@@ -15,15 +15,15 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_QueryAchievementsAsyncResult : public 
 	GENERATED_BODY()
 
 public:
-	typedef TDelegate<void(bool, const TArray<FOSSAchievementsAchievementState> &, FString)> FNativeCallback;
+	typedef TDelegate<void(bool, const TArray<FMOSAchievementsAchievementState> &, FString)> FNativeCallback;
 	bool bDidCallback;
 	FNativeCallback NativeCallback;
 
-	typedef const TArray<FOSSAchievementsAchievementState> &ResultType;
+	typedef const TArray<FMOSAchievementsAchievementState> &ResultType;
 
 	UFUNCTION(BlueprintCallable, Category = "Callbacks")
 	void OnResult(
 		bool bWasSuccessful,
-		const TArray<FOSSAchievementsAchievementState> &Results,
+		const TArray<FMOSAchievementsAchievementState> &Results,
 		const FString &ErrorMessage);
 };

@@ -8,17 +8,17 @@
 #include "VoiceChat.h"
 #include "Interfaces/OnlineSessionInterface.h"
 
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_AsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_CallScopedOjectPtr.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_GetAvatarAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_ListAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_QueryAchievementsAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_QueryLeaderboardsAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_QueryStatsAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_ReadFileSaveGameAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_ReadFileStringAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_TextAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_Types.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_AsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_CallScopedOjectPtr.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_GetAvatarAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_ListAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_QueryAchievementsAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_QueryLeaderboardsAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_QueryStatsAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_ReadFileSaveGameAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_ReadFileStringAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_TextAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_Types.h"
 
 #include "MOS_GameInstanceSubsystem.generated.h"
 
@@ -48,7 +48,7 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameIn
 public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "OSS")
-	TArray<FOSSSessionsSearchResult> CachedFindSessionResults;
+	TArray<FMOSSessionsSearchResult> CachedFindSessionResults;
 	UPROPERTY(BlueprintReadOnly, Category = "OSS")
 	UMOS_AsyncResult* AsyncResult;
 	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
@@ -106,7 +106,7 @@ public:
 	
     bool GetAuthCanLinkCrossPlatformAccount() const;
 	UFUNCTION( BlueprintCallable, meta = (DisplayName = "GetAuthCanLinkCrossPlatformAccount", Category = "Auth"))
-	void GetSessionInfo(const FOSSSessionsSearchResult &SearchResult);
+	void GetSessionInfo(const FMOSSessionsSearchResult &SearchResult);
 	
     /* SESSIONS */
 	
@@ -123,10 +123,10 @@ public:
     void ExecuteSessionsCreateSession(FName SessionName, UMOS_AsyncResult *Result);
 	void OnCreateSessionComplete(FName InSessionName, bool bWasSuccessful);
     UFUNCTION(BlueprintCallable)
-    void ExecuteSessionsJoinSession(const FOSSSessionsSearchResult &SearchResult, FName SessionName, UMOS_AsyncResult *Result);
+    void ExecuteSessionsJoinSession(const FMOSSessionsSearchResult &SearchResult, FName SessionName, UMOS_AsyncResult *Result);
 	void OnJoinSessionComplete(FName InSessionName, EOnJoinSessionCompleteResult::Type Result);
 	
-    void ExecuteSessionsJoinSessionWithParty(const FOSSSessionsSearchResult &SearchResult, FName SessionName, UMOS_AsyncResult *Result);
+    void ExecuteSessionsJoinSessionWithParty(const FMOSSessionsSearchResult &SearchResult, FName SessionName, UMOS_AsyncResult *Result);
     FString GetSessionId(FName SessionName) const;
     TArray<FUniqueNetIdRepl> GetSessionRegisteredPlayerIds(FName SessionName) const;
     UFUNCTION(BlueprintCallable)
@@ -143,12 +143,12 @@ public:
     /* ECOMMERCE */
 	
     void ExecuteEcommerceQueryOffers(UMOS_AsyncResult *Result);
-    TArray<FOSSEcommerceOffer> GetEcommerceCachedOffers() const;
+    TArray<FMOSEcommerceOffer> GetEcommerceCachedOffers() const;
     void ExecuteEcommerceStartPurchase(UMOS_AsyncResult *Result, const TMap<FString, int32> &OfferIdsToQuantities);
     void ExecuteEcommerceQueryEntitlements(UMOS_AsyncResult *Result);
-    TArray<FOSSEcommerceEntitlement> GetEcommerceCachedEntitlements() const;
+    TArray<FMOSEcommerceEntitlement> GetEcommerceCachedEntitlements() const;
     void ExecuteEcommerceQueryReceipts(UMOS_AsyncResult *Result);
-    TArray<FOSSEcommerceReceipt> GetEcommerceCachedReceipts() const;
+    TArray<FMOSEcommerceReceipt> GetEcommerceCachedReceipts() const;
 	
     /* FRIENDS */
 	
@@ -159,7 +159,7 @@ public:
 	void RaiseFriendsOnFriendsChange();
     UFUNCTION(BlueprintCallable)
     TArray<FUniqueNetIdRepl> GetFriendsCurrentFriends() const;
-    FOSSFriendsFriendState GetFriendsFriendState(const FUniqueNetIdRepl &UserId) const;
+    FMOSFriendsFriendState GetFriendsFriendState(const FUniqueNetIdRepl &UserId) const;
     void ExecuteFriendsSetFriendAlias(const FUniqueNetIdRepl &UserId, const FString &Alias, UMOS_AsyncResult *Result);
     void ExecuteFriendsDeleteFriendAlias(const FUniqueNetIdRepl &UserId, UMOS_AsyncResult *Result);
     void ExecuteFriendsSendInvite(const FUniqueNetIdRepl &UserId, UMOS_AsyncResult *Result);
@@ -167,11 +167,11 @@ public:
     void ExecuteFriendsRejectInvite(const FUniqueNetIdRepl &UserId, UMOS_AsyncResult *Result);
     void ExecuteFriendsDeleteFriend(const FUniqueNetIdRepl &UserId, UMOS_AsyncResult *Result);
     void ExecuteFriendsQueryRecentPlayers(UMOS_AsyncResult *Result);
-    TArray<FOSSFriendsRecentPlayerState> GetFriendsCurrentRecentPlayers() const;
+    TArray<FMOSFriendsRecentPlayerState> GetFriendsCurrentRecentPlayers() const;
     void ExecuteFriendsBlockPlayer(const FUniqueNetIdRepl &UserId, UMOS_AsyncResult *Result);
     void ExecuteFriendsUnblockPlayer(const FUniqueNetIdRepl &UserId, UMOS_AsyncResult *Result);
     void ExecuteFriendsQueryBlockedPlayers(UMOS_AsyncResult *Result);
-    TArray<FOSSFriendsBlockedPlayerState> GetFriendsCurrentBlockedPlayers() const;
+    TArray<FMOSFriendsBlockedPlayerState> GetFriendsCurrentBlockedPlayers() const;
     void ExecuteFriendsSendInviteByFriendCode(const FString &FriendCode, UMOS_AsyncResult *Result);
     FString GetFriendsCurrentFriendCode() const;
 	
@@ -187,31 +187,31 @@ public:
 
     void ExecuteVoiceChatLogin(UMOS_AsyncResult *Result);
     void ExecuteVoiceChatLogout(UMOS_AsyncResult *Result);
-    TArray<FOSSInterfaceListEntry> GetVoiceChatInputDevices() const;
+    TArray<FMOSInterfaceListEntry> GetVoiceChatInputDevices() const;
     FString GetVoiceChatCurrentInputDevice() const;
     void SetVoiceChatCurrentInputDevice(const FString &Id);
     float GetVoiceChatInputVolume() const;
     void SetVoiceChatInputVolume(float Volume);
     bool GetVoiceChatInputMuted() const;
     void SetVoiceChatInputMuted(bool bIsMuted);
-    TArray<FOSSInterfaceListEntry> GetVoiceChatOutputDevices() const;
+    TArray<FMOSInterfaceListEntry> GetVoiceChatOutputDevices() const;
     FString GetVoiceChatCurrentOutputDevice() const;
     void SetVoiceChatCurrentOutputDevice(const FString &Id);
     float GetVoiceChatOutputVolume() const;
     void SetVoiceChatOutputVolume(float Volume);
     bool GetVoiceChatOutputMuted() const;
     void SetVoiceChatOutputMuted(bool bIsMuted);
-    EOSSInterfaceVoiceChatConnectionStatus GetVoiceChatConnectionStatus() const;
+    EMOSInterfaceVoiceChatConnectionStatus GetVoiceChatConnectionStatus() const;
     FString GetVoiceChatSetting(const FString &SettingKey) const;
     void SetVoiceChatSetting(const FString &SettingKey, const FString &SettingValue);
-    TArray<FOSSInterfaceListEntry> GetVoiceChatChannels() const;
+    TArray<FMOSInterfaceListEntry> GetVoiceChatChannels() const;
 	
 	/* PARTIES */
 
-	TArray<FOSSInterfaceListEntry> GetPartiesJoinedParties() const;
+	TArray<FMOSInterfaceListEntry> GetPartiesJoinedParties() const;
     void ExecutePartiesCreateParty(UMOS_AsyncResult *Result);
-    TArray<FOSSInterfaceListEntry> GetPartiesCurrentInvites() const;
-    void ExecutePartiesAcceptInvite(const FOSSInterfaceListEntry &Invite, UMOS_AsyncResult *Result);
+    TArray<FMOSInterfaceListEntry> GetPartiesCurrentInvites() const;
+    void ExecutePartiesAcceptInvite(const FMOSInterfaceListEntry &Invite, UMOS_AsyncResult *Result);
     TArray<FUniqueNetIdRepl> GetPartiesCurrentMembers(const FString &PartyId) const;
     void ExecutePartiesLeaveParty(const FString &PartyId, UMOS_AsyncResult *Result);
     void ExecutePartiesKickMember( const FString &PartyId, const FUniqueNetIdRepl &MemberId, UMOS_AsyncResult *Result);

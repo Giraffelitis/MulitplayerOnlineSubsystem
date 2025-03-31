@@ -1,17 +1,17 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "Interfaces/OnlinePartyInterface.h"
 #include "OnlineSubsystemUtils.h"
 
-TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetPartiesJoinedParties() const
+TArray<FMOSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetPartiesJoinedParties() const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return TArray<FOSSInterfaceListEntry>();
+        return TArray<FMOSInterfaceListEntry>();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -24,16 +24,16 @@ TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetPartiesJoinedParti
     auto PartySystem = OSS->GetPartyInterface();
     if (!PartySystem.IsValid())
     {
-        return TArray<FOSSInterfaceListEntry>();
+        return TArray<FMOSInterfaceListEntry>();
     }
 
     // Get the list of parties currently joined.
-    TArray<FOSSInterfaceListEntry> Entries;
+    TArray<FMOSInterfaceListEntry> Entries;
     TArray<TSharedRef<const FOnlinePartyId>> PartyIds;
     PartySystem->GetJoinedParties(*UserId, PartyIds);
     for (const auto &PartyId : PartyIds)
     {
-        FOSSInterfaceListEntry Entry;
+        FMOSInterfaceListEntry Entry;
         Entry.Id = PartyId->ToString();
         Entry.DisplayName = FText::FromString(PartyId->ToString());
         Entries.Add(Entry);
@@ -133,13 +133,13 @@ void UMOS_GameInstanceSubsystem::ExecutePartiesCreateParty(UMOS_AsyncResult *Res
             }));
 }
 
-TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetPartiesCurrentInvites() const
+TArray<FMOSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetPartiesCurrentInvites() const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return TArray<FOSSInterfaceListEntry>();
+        return TArray<FMOSInterfaceListEntry>();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -152,16 +152,16 @@ TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetPartiesCurrentInvi
     auto PartySystem = OSS->GetPartyInterface();
     if (!PartySystem.IsValid())
     {
-        return TArray<FOSSInterfaceListEntry>();
+        return TArray<FMOSInterfaceListEntry>();
     }
 
     // Get the list of current party invites.
-    TArray<FOSSInterfaceListEntry> Entries;
+    TArray<FMOSInterfaceListEntry> Entries;
     TArray<IOnlinePartyJoinInfoConstRef> PartyInvites;
     PartySystem->GetPendingInvites(*UserId, PartyInvites);
     for (const auto &PartyInvite : PartyInvites)
     {
-        FOSSInterfaceListEntry Entry;
+        FMOSInterfaceListEntry Entry;
         Entry.Id = PartyInvite->GetPartyId()->ToString();
         Entry.DisplayName = FText::Format(
             NSLOCTEXT("Party", "PartyInviteDisplayName", "Party: {0}\nInvited By UID: {1}\nInvited By Name: {2}"),
@@ -174,7 +174,7 @@ TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetPartiesCurrentInvi
 }
 
 void UMOS_GameInstanceSubsystem::ExecutePartiesAcceptInvite(
-    const FOSSInterfaceListEntry &Invite,
+    const FMOSInterfaceListEntry &Invite,
     UMOS_AsyncResult *Result)
 {
     // Get the online subsystem.

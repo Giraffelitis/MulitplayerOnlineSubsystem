@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "OnlineSubsystemUtils.h"
 
@@ -122,20 +122,20 @@ void UMOS_GameInstanceSubsystem::ExecuteVoiceChatLogout(UMOS_AsyncResult *Result
         }));
 }
 
-TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetVoiceChatInputDevices() const
+TArray<FMOSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetVoiceChatInputDevices() const
 {
     // Make sure our voice chat user is signed in.
     
     if (CachedVoiceChatUser == nullptr || !CachedVoiceChatUser->IsLoggedIn())
     {
-        return TArray<FOSSInterfaceListEntry>();
+        return TArray<FMOSInterfaceListEntry>();
     }
 
     // Return the voice chat input devices.
-    TArray<FOSSInterfaceListEntry> Entries;
+    TArray<FMOSInterfaceListEntry> Entries;
     for (const auto &InputDevice : CachedVoiceChatUser->GetAvailableInputDeviceInfos())
     {
-        FOSSInterfaceListEntry Entry;
+        FMOSInterfaceListEntry Entry;
         Entry.Id = InputDevice.Id;
         Entry.DisplayName = FText::FromString(InputDevice.DisplayName);
         Entries.Add(Entry);
@@ -218,19 +218,19 @@ void UMOS_GameInstanceSubsystem::SetVoiceChatInputMuted(bool bIsMuted)
     CachedVoiceChatUser->SetAudioInputDeviceMuted(bIsMuted);
 }
 
-TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetVoiceChatOutputDevices() const
+TArray<FMOSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetVoiceChatOutputDevices() const
 {
     // Make sure our voice chat user is signed in.
     if (CachedVoiceChatUser == nullptr || CachedVoiceChatUser->IsLoggedIn())
     {
-        return TArray<FOSSInterfaceListEntry>();
+        return TArray<FMOSInterfaceListEntry>();
     }
 
     // Return the voice chat output devices.
-    TArray<FOSSInterfaceListEntry> Entries;
+    TArray<FMOSInterfaceListEntry> Entries;
     for (const auto &OutputDevice : CachedVoiceChatUser->GetAvailableOutputDeviceInfos())
     {
-        FOSSInterfaceListEntry Entry;
+        FMOSInterfaceListEntry Entry;
         Entry.Id = OutputDevice.Id;
         Entry.DisplayName = FText::FromString(OutputDevice.DisplayName);
         Entries.Add(Entry);
@@ -314,27 +314,27 @@ void UMOS_GameInstanceSubsystem::SetVoiceChatOutputMuted(bool bIsMuted)
     CachedVoiceChatUser->SetAudioOutputDeviceMuted(bIsMuted);
 }
 
-EOSSInterfaceVoiceChatConnectionStatus UMOS_GameInstanceSubsystem::GetVoiceChatConnectionStatus() const
+EMOSInterfaceVoiceChatConnectionStatus UMOS_GameInstanceSubsystem::GetVoiceChatConnectionStatus() const
 {
     // Make sure we have a voice chat implementation.
     auto *VC = IVoiceChat::Get();
     if (VC == nullptr)
     {
-        return EOSSInterfaceVoiceChatConnectionStatus::NotConnected;
+        return EMOSInterfaceVoiceChatConnectionStatus::NotConnected;
     }
 
     // Return the connection status.
     if (VC->IsConnecting())
     {
-        return EOSSInterfaceVoiceChatConnectionStatus::Connecting;
+        return EMOSInterfaceVoiceChatConnectionStatus::Connecting;
     }
     else if (VC->IsConnected())
     {
-        return EOSSInterfaceVoiceChatConnectionStatus::Connected;
+        return EMOSInterfaceVoiceChatConnectionStatus::Connected;
     }
     else
     {
-        return EOSSInterfaceVoiceChatConnectionStatus::NotConnected;
+        return EMOSInterfaceVoiceChatConnectionStatus::NotConnected;
     }
 }
 
@@ -362,19 +362,19 @@ void UMOS_GameInstanceSubsystem::SetVoiceChatSetting(const FString &SettingKey, 
     CachedVoiceChatUser->SetSetting(SettingKey, SettingValue);
 }
 
-TArray<FOSSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetVoiceChatChannels() const
+TArray<FMOSInterfaceListEntry> UMOS_GameInstanceSubsystem::GetVoiceChatChannels() const
 {
     // Make sure our voice chat user is signed in.
     if (CachedVoiceChatUser == nullptr || CachedVoiceChatUser->IsLoggedIn())
     {
-        return TArray<FOSSInterfaceListEntry>();
+        return TArray<FMOSInterfaceListEntry>();
     }
 
     // Return the voice chat channels.
-    TArray<FOSSInterfaceListEntry> Entries;
+    TArray<FMOSInterfaceListEntry> Entries;
     for (const auto &Channel : CachedVoiceChatUser->GetChannels())
     {
-        FOSSInterfaceListEntry Entry;
+        FMOSInterfaceListEntry Entry;
         Entry.Id = Channel;
         Entry.DisplayName = FText::FromString(Channel);
         Entries.Add(Entry);

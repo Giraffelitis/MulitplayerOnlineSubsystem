@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "Interfaces/OnlineLeaderboardInterface.h"
 #include "OnlineSubsystemUtils.h"
@@ -15,7 +15,7 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryGlobalLeaderboards(
     {
         Result->OnResult(
             false,
-            TArray<FOSSLeaderboardsLeaderboardEntry>(),
+            TArray<FMOSLeaderboardsLeaderboardEntry>(),
             TEXT("Online subsystem is not available."));
         return;
     }
@@ -32,7 +32,7 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryGlobalLeaderboards(
     {
         Result->OnResult(
             false,
-            TArray<FOSSLeaderboardsLeaderboardEntry>(),
+            TArray<FMOSLeaderboardsLeaderboardEntry>(),
             TEXT("Online subsystem does not support friends."));
         return;
     }
@@ -75,21 +75,21 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryGlobalLeaderboards(
                 {
                     ResultWk->OnResult(
                         false,
-                        TArray<FOSSLeaderboardsLeaderboardEntry>(),
+                        TArray<FMOSLeaderboardsLeaderboardEntry>(),
                         TEXT("Leaderboard read failed."));
                     Leaderboards->ClearOnLeaderboardReadCompleteDelegate_Handle(*CallbackHandle);
                     return;
                 }
 
                 // Otherise, convert the results.
-                TArray<FOSSLeaderboardsLeaderboardEntry> Results;
+                TArray<FMOSLeaderboardsLeaderboardEntry> Results;
                 for (const auto &Row : ReadObject->Rows)
                 {
                     // @note: On EOS, when you perform a ranked search, the value is always in the "Score" column.
                     int Score;
                     Row.Columns["Score"].GetValue(Score);
 
-                    FOSSLeaderboardsLeaderboardEntry Entry;
+                    FMOSLeaderboardsLeaderboardEntry Entry;
                     Entry.CurrentValue = Score;
                     Entry.PlayerName = FString::Printf(TEXT("%s - %s"), *Row.PlayerId->ToString(), *Row.NickName);
                     Entry.Rank = Row.Rank;
@@ -108,7 +108,7 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryGlobalLeaderboards(
     {
         Result->OnResult(
             false,
-            TArray<FOSSLeaderboardsLeaderboardEntry>(),
+            TArray<FMOSLeaderboardsLeaderboardEntry>(),
             TEXT("ReadLeaderboardsAroundRank call failed to start."));
         Leaderboards->ClearOnLeaderboardReadCompleteDelegate_Handle(*CallbackHandle);
     }
@@ -123,7 +123,7 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryFriendsLeaderboards(
     {
         Result->OnResult(
             false,
-            TArray<FOSSLeaderboardsLeaderboardEntry>(),
+            TArray<FMOSLeaderboardsLeaderboardEntry>(),
             TEXT("Online subsystem is not available."));
         return;
     }
@@ -140,7 +140,7 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryFriendsLeaderboards(
     {
         Result->OnResult(
             false,
-            TArray<FOSSLeaderboardsLeaderboardEntry>(),
+            TArray<FMOSLeaderboardsLeaderboardEntry>(),
             TEXT("Online subsystem does not support friends."));
         return;
     }
@@ -183,14 +183,14 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryFriendsLeaderboards(
                 {
                     ResultWk->OnResult(
                         false,
-                        TArray<FOSSLeaderboardsLeaderboardEntry>(),
+                        TArray<FMOSLeaderboardsLeaderboardEntry>(),
                         TEXT("Leaderboard read failed."));
                     Leaderboards->ClearOnLeaderboardReadCompleteDelegate_Handle(*CallbackHandle);
                     return;
                 }
 
                 // Otherise, convert the results.
-                TArray<FOSSLeaderboardsLeaderboardEntry> Results;
+                TArray<FMOSLeaderboardsLeaderboardEntry> Results;
                 for (const auto &Row : ReadObject->Rows)
                 {
                     // @note: On EOS, when you perform a friend search, the value is in a column that matches the stat
@@ -198,7 +198,7 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryFriendsLeaderboards(
                     int Score;
                     Row.Columns["TestScore"].GetValue(Score);
 
-                    FOSSLeaderboardsLeaderboardEntry Entry;
+                    FMOSLeaderboardsLeaderboardEntry Entry;
                     Entry.CurrentValue = Score;
                     Entry.PlayerName = FString::Printf(TEXT("%s - %s"), *Row.PlayerId->ToString(), *Row.NickName);
                     Entry.Rank = Row.Rank;
@@ -217,7 +217,7 @@ void UMOS_GameInstanceSubsystem::ExecuteLeaderboardsQueryFriendsLeaderboards(
     {
         Result->OnResult(
             true,
-            TArray<FOSSLeaderboardsLeaderboardEntry>(),
+            TArray<FMOSLeaderboardsLeaderboardEntry>(),
             TEXT("ReadLeaderboardsForFriends call failed to start."));
         Leaderboards->ClearOnLeaderboardReadCompleteDelegate_Handle(*CallbackHandle);
     }

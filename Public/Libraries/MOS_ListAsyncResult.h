@@ -15,15 +15,15 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_ListAsyncResult : public UObject
 	GENERATED_BODY()
 
 public:
-	typedef TDelegate<void(bool, const TArray<FOSSInterfaceListEntry> &, FString)> FNativeCallback;
+	typedef TDelegate<void(bool, const TArray<FMOSInterfaceListEntry> &, FString)> FNativeCallback;
 	bool bDidCallback;
 	FNativeCallback NativeCallback;
 
-	typedef const TArray<FOSSInterfaceListEntry> &ResultType;
+	typedef const TArray<FMOSInterfaceListEntry> &ResultType;
 
 	UFUNCTION(BlueprintCallable, Category = "Callbacks")
 	void OnResult(
 		bool bWasSuccessful,
-		const TArray<FOSSInterfaceListEntry> &Results,
+		const TArray<FMOSInterfaceListEntry> &Results,
 		const FString &ErrorMessage);
 };

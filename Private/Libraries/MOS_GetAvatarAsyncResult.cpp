@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_GetAvatarAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_GetAvatarAsyncResult.h"
 
 void UMOS_GetAvatarAsyncResult::OnResult(
 	bool bWasSuccessful,

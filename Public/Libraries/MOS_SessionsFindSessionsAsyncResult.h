@@ -15,13 +15,13 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_SessionsFindSessionsAsyncResult : publ
 	GENERATED_BODY()
 	
 public:
-	typedef TDelegate<void(bool, const TArray<FOSSSessionsSearchResult> &, FString)> FNativeCallback;
+	typedef TDelegate<void(bool, const TArray<FMOSSessionsSearchResult> &, FString)> FNativeCallback;
 	bool bDidCallback;
 	FNativeCallback NativeCallback;
 
-	typedef const TArray<FOSSSessionsSearchResult> &ResultType;
+	typedef const TArray<FMOSSessionsSearchResult> &ResultType;
 
 	UFUNCTION(BlueprintCallable, Category = "Callbacks")
-	void OnResult(bool bWasSuccessful, const TArray<FOSSSessionsSearchResult> &Results, const FString &ErrorMessage);
+	void OnResult(bool bWasSuccessful, const TArray<FMOSSessionsSearchResult> &Results, const FString &ErrorMessage);
 	
 };

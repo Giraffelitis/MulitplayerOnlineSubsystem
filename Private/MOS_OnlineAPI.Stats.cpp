@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "Interfaces/OnlineStatsInterface.h"
 #include "OnlineSubsystemUtils.h"
@@ -12,7 +12,7 @@ void UMOS_GameInstanceSubsystem::ExecuteStatsQueryStats(UMOS_QueryStatsAsyncResu
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        Result->OnResult(false, TArray<FOSSStatsStatState>(), TEXT("Online subsystem is not available."));
+        Result->OnResult(false, TArray<FMOSStatsStatState>(), TEXT("Online subsystem is not available."));
         return;
     }
 
@@ -26,7 +26,7 @@ void UMOS_GameInstanceSubsystem::ExecuteStatsQueryStats(UMOS_QueryStatsAsyncResu
     auto Stats = OSS->GetStatsInterface();
     if (!Stats.IsValid())
     {
-        Result->OnResult(false, TArray<FOSSStatsStatState>(), TEXT("Online subsystem does not support stats."));
+        Result->OnResult(false, TArray<FMOSStatsStatState>(), TEXT("Online subsystem does not support stats."));
         return;
     }
 
@@ -54,15 +54,15 @@ void UMOS_GameInstanceSubsystem::ExecuteStatsQueryStats(UMOS_QueryStatsAsyncResu
                 // Return if the call failed.
                 if (!CallbackResult.bSucceeded || CallbackUsersStats.Num() == 0)
                 {
-                    ResultWk->OnResult(false, TArray<FOSSStatsStatState>(), TEXT("QueryStats call failed."));
+                    ResultWk->OnResult(false, TArray<FMOSStatsStatState>(), TEXT("QueryStats call failed."));
                     return;
                 }
 
                 // Convert the results.
-                TArray<FOSSStatsStatState> Entries;
+                TArray<FMOSStatsStatState> Entries;
                 for (const auto &StatKV : CallbackUsersStats[0]->Stats)
                 {
-                    FOSSStatsStatState Entry;
+                    FMOSStatsStatState Entry;
                     Entry.Name = StatKV.Key;
                     int32 Value;
                     StatKV.Value.GetValue(Value);

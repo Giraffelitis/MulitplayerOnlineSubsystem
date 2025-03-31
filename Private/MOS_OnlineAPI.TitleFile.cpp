@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "Interfaces/OnlineTitleFileInterface.h"
 #include "OnlineSubsystemUtils.h"
@@ -12,7 +12,7 @@ void UMOS_GameInstanceSubsystem::ExecuteTitleFileQueryFiles(UMOS_ListAsyncResult
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        Result->OnResult(false, TArray<FOSSInterfaceListEntry>(), TEXT("Online subsystem is not available."));
+        Result->OnResult(false, TArray<FMOSInterfaceListEntry>(), TEXT("Online subsystem is not available."));
         return;
     }
 
@@ -28,7 +28,7 @@ void UMOS_GameInstanceSubsystem::ExecuteTitleFileQueryFiles(UMOS_ListAsyncResult
     {
         Result->OnResult(
             false,
-            TArray<FOSSInterfaceListEntry>(),
+            TArray<FMOSInterfaceListEntry>(),
             TEXT("Online subsystem does not support title file."));
         return;
     }
@@ -50,18 +50,18 @@ void UMOS_GameInstanceSubsystem::ExecuteTitleFileQueryFiles(UMOS_ListAsyncResult
                 // Return if the read failed.
                 if (!bCallbackWasSuccessful)
                 {
-                    ResultWk->OnResult(false, TArray<FOSSInterfaceListEntry>(), CallbackErrorMessage);
+                    ResultWk->OnResult(false, TArray<FMOSInterfaceListEntry>(), CallbackErrorMessage);
                     TitleFile->ClearOnEnumerateFilesCompleteDelegate_Handle(*CallbackHandle);
                     return;
                 }
 
                 // Otherwise, convert the results.
-                TArray<FOSSInterfaceListEntry> Entries;
+                TArray<FMOSInterfaceListEntry> Entries;
                 TArray<FCloudFileHeader> TitleFileFiles;
                 TitleFile->GetFileList(TitleFileFiles);
                 for (const auto &TitleFileFile : TitleFileFiles)
                 {
-                    FOSSInterfaceListEntry Entry;
+                    FMOSInterfaceListEntry Entry;
                     Entry.Id = TitleFileFile.FileName;
                     Entry.DisplayName = FText::FromString(TitleFileFile.FileName);
                     Entries.Add(Entry);

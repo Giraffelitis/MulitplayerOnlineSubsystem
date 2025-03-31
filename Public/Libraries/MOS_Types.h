@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "OnlineSessionSettings.h"
+
 #include "MOS_Types.generated.h"
 
 /***********/
@@ -11,7 +12,7 @@
 /***********/
 
 UENUM(BlueprintType)
-enum class EOSSInterfaceVoiceChatConnectionStatus : uint8
+enum class EMOSInterfaceVoiceChatConnectionStatus : uint8
 {
 	/** Not connected to voice chat. */
 	NotConnected,
@@ -24,7 +25,7 @@ enum class EOSSInterfaceVoiceChatConnectionStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class EOSSFriendsFriendInvitationStatus : uint8
+enum class EMOSFriendsFriendInvitationStatus : uint8
 {
 	Unknown,
 	Accepted,
@@ -35,7 +36,7 @@ enum class EOSSFriendsFriendInvitationStatus : uint8
 };
 
 UENUM(BlueprintType)
-enum class EOSSFriendsFriendPresenceStatus : uint8
+enum class EMOSFriendsFriendPresenceStatus : uint8
 {
 	Online,
 	Offline,
@@ -50,7 +51,7 @@ enum class EOSSFriendsFriendPresenceStatus : uint8
 /***********/
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSSessionsSearchResult
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSSessionsSearchResult
 {
 	GENERATED_BODY()
 
@@ -61,7 +62,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSSessionsSearchResult
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSLeaderboardsLeaderboardEntry
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSLeaderboardsLeaderboardEntry
 {
 	GENERATED_BODY()
 	
@@ -76,7 +77,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSLeaderboardsLeaderboardEntry
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSAchievementsAchievementState
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSAchievementsAchievementState
 {
 	GENERATED_BODY()
 	
@@ -94,7 +95,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSAchievementsAchievementState
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSEcommerceOffer
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSEcommerceOffer
 {
 	GENERATED_BODY()
 	
@@ -109,7 +110,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSEcommerceOffer
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSEcommerceEntitlement
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSEcommerceEntitlement
 {
 	GENERATED_BODY()
 
@@ -127,7 +128,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSEcommerceEntitlement
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSStatsStatState
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSStatsStatState
 {
 	GENERATED_BODY()
 	
@@ -139,7 +140,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSStatsStatState
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSEcommerceReceipt
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSEcommerceReceipt
 {
 	GENERATED_BODY()
 
@@ -163,7 +164,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FUIListEntry
 typedef TSharedPtr<FUIListEntry> FUIListEntryPtr;
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSInterfaceListEntry
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSInterfaceListEntry
 {
 	GENERATED_BODY()
 	
@@ -176,12 +177,12 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSInterfaceListEntry
 	FText DisplayName;
 
 	static void SynchroniseToComboBoxList(
-		const TArray<FOSSInterfaceListEntry> &InOptions,
+		const TArray<FMOSInterfaceListEntry> &InOptions,
 		TArray<FUIListEntryPtr> &InOutComboBoxList);
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSFriendsFriendState
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSFriendsFriendState
 {
     GENERATED_BODY()
 
@@ -195,7 +196,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSFriendsFriendState
     FString RealName;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Friend")
-    EOSSFriendsFriendInvitationStatus InvitationStatus = EOSSFriendsFriendInvitationStatus::Unknown;
+    EMOSFriendsFriendInvitationStatus InvitationStatus = EMOSFriendsFriendInvitationStatus::Unknown;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Friend")
     FUniqueNetIdRepl PresenceSessionId;
@@ -225,7 +226,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSFriendsFriendState
     FString PresenceStatusString;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Friend")
-    EOSSFriendsFriendPresenceStatus PresenceStatusState = EOSSFriendsFriendPresenceStatus::Offline;
+    EMOSFriendsFriendPresenceStatus PresenceStatusState = EMOSFriendsFriendPresenceStatus::Offline;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Friend")
     TMap<FString, FString> PresenceStatusProperties;
@@ -235,7 +236,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSFriendsFriendState
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSFriendsRecentPlayerState
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSFriendsRecentPlayerState
 {
 	GENERATED_BODY()
 	
@@ -247,7 +248,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FOSSFriendsRecentPlayerState
 };
 
 USTRUCT(BlueprintType)
-struct MULTIPLAYERONLINESUBSYSTEM_API FOSSFriendsBlockedPlayerState
+struct MULTIPLAYERONLINESUBSYSTEM_API FMOSFriendsBlockedPlayerState
 {
 	GENERATED_BODY()
 

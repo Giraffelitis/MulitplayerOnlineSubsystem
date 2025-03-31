@@ -1,10 +1,10 @@
 //  Copyright Grumpy Giraffe Games. All Rights Reserved.
 
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 #include "OnlineSubsystemUtils.h"
 #include "Interfaces/OnlineSessionInterface.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_SessionsFindSessionsAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_SessionsFindSessionsAsyncResult.h"
 
 typedef TMap<FString, int32> TMap_FString_int32;
 

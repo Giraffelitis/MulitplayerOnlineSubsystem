@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_ReadFileStringAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_ReadFileStringAsyncResult.h"
 
 void UMOS_ReadFileStringAsyncResult::OnResult(
 	bool bWasSuccessful,

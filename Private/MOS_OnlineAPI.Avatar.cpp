@@ -1,8 +1,8 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
-#include "MultiplayerOnlineSusbsystem/Public/Interfaces/OnlineAvatarInterface.h"
+#include "MultiplayerOnlineSubsystem/Public/Interfaces/OnlineAvatarInterface.h"
 
 #include "OnlineSubsystemUtils.h"
 

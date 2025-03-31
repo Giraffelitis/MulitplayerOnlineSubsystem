@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "OnlineSubsystemUtils.h"
 #include "DebugPlus/Public/DP_EnhancedLogging.h"

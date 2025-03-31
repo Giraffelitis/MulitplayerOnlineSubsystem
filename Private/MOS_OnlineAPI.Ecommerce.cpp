@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "Interfaces/OnlineEntitlementsInterface.h"
 #include "Interfaces/OnlinePurchaseInterface.h"
@@ -51,13 +51,13 @@ void UMOS_GameInstanceSubsystem::ExecuteEcommerceQueryOffers(UMOS_AsyncResult *R
             }));
 }
 
-TArray<FOSSEcommerceOffer> UMOS_GameInstanceSubsystem::GetEcommerceCachedOffers() const
+TArray<FMOSEcommerceOffer> UMOS_GameInstanceSubsystem::GetEcommerceCachedOffers() const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return TArray<FOSSEcommerceOffer>();
+        return TArray<FMOSEcommerceOffer>();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -70,16 +70,16 @@ TArray<FOSSEcommerceOffer> UMOS_GameInstanceSubsystem::GetEcommerceCachedOffers(
     auto StoreV2 = OSS->GetStoreV2Interface();
     if (!StoreV2.IsValid())
     {
-        return TArray<FOSSEcommerceOffer>();
+        return TArray<FMOSEcommerceOffer>();
     }
 
     // Get all of the cached offers and return them.
-    TArray<FOSSEcommerceOffer> Results;
+    TArray<FMOSEcommerceOffer> Results;
     TArray<FOnlineStoreOfferRef> Offers;
     StoreV2->GetOffers(Offers);
     for (const auto &Offer : Offers)
     {
-        FOSSEcommerceOffer Result;
+        FMOSEcommerceOffer Result;
         Result.Id = Offer->OfferId;
         Result.Title = Offer->Title;
         Result.CurrentPrice = Offer->GetDisplayPrice();
@@ -202,13 +202,13 @@ void UMOS_GameInstanceSubsystem::ExecuteEcommerceQueryEntitlements(UMOS_AsyncRes
     }
 }
 
-TArray<FOSSEcommerceEntitlement> UMOS_GameInstanceSubsystem::GetEcommerceCachedEntitlements() const
+TArray<FMOSEcommerceEntitlement> UMOS_GameInstanceSubsystem::GetEcommerceCachedEntitlements() const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return TArray<FOSSEcommerceEntitlement>();
+        return TArray<FMOSEcommerceEntitlement>();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -221,16 +221,16 @@ TArray<FOSSEcommerceEntitlement> UMOS_GameInstanceSubsystem::GetEcommerceCachedE
     auto Entitlements = OSS->GetEntitlementsInterface();
     if (!Entitlements.IsValid())
     {
-        return TArray<FOSSEcommerceEntitlement>();
+        return TArray<FMOSEcommerceEntitlement>();
     }
 
     // Get all of the cached entitlements and return them.
-    TArray<FOSSEcommerceEntitlement> Results;
+    TArray<FMOSEcommerceEntitlement> Results;
     TArray<TSharedRef<FOnlineEntitlement>> EntitlementsArray;
     Entitlements->GetAllEntitlements(*UserId, TEXT(""), EntitlementsArray);
     for (const auto &Entitlement : EntitlementsArray)
     {
-        FOSSEcommerceEntitlement Result;
+        FMOSEcommerceEntitlement Result;
         Result.Id = Entitlement->Id;
         Result.Title = FText::FromString(Entitlement->Name);
         Result.Status = Entitlement->Status;
@@ -282,13 +282,13 @@ void UMOS_GameInstanceSubsystem::ExecuteEcommerceQueryReceipts(UMOS_AsyncResult 
             }));
 }
 
-TArray<FOSSEcommerceReceipt> UMOS_GameInstanceSubsystem::GetEcommerceCachedReceipts() const
+TArray<FMOSEcommerceReceipt> UMOS_GameInstanceSubsystem::GetEcommerceCachedReceipts() const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return TArray<FOSSEcommerceReceipt>();
+        return TArray<FMOSEcommerceReceipt>();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -301,16 +301,16 @@ TArray<FOSSEcommerceReceipt> UMOS_GameInstanceSubsystem::GetEcommerceCachedRecei
     auto Purchase = OSS->GetPurchaseInterface();
     if (!Purchase.IsValid())
     {
-        return TArray<FOSSEcommerceReceipt>();
+        return TArray<FMOSEcommerceReceipt>();
     }
 
     // Get all of the cached receipts and return them.
-    TArray<FOSSEcommerceReceipt> Results;
+    TArray<FMOSEcommerceReceipt> Results;
     TArray<FPurchaseReceipt> Receipts;
     Purchase->GetReceipts(*UserId, Receipts);
     for (const auto &Receipt : Receipts)
     {
-        FOSSEcommerceReceipt Result;
+        FMOSEcommerceReceipt Result;
         Result.Id = Receipt.TransactionId;
         Result.Title = FText::FromString(Receipt.TransactionId);
         Results.Add(Result);

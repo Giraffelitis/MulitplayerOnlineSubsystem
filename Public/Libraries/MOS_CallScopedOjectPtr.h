@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_CallManagerBase.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_CallManagerBase.h"
 #include "UObject/StrongObjectPtr.h"
 
 namespace OSS::OnlineAPI

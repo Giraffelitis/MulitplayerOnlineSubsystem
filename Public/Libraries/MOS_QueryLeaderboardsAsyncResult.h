@@ -14,15 +14,15 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_QueryLeaderboardsAsyncResult : public 
 	GENERATED_BODY()
 
 public:
-	typedef TDelegate<void(bool, const TArray<FOSSLeaderboardsLeaderboardEntry> &, FString)> FNativeCallback;
+	typedef TDelegate<void(bool, const TArray<FMOSLeaderboardsLeaderboardEntry> &, FString)> FNativeCallback;
 	bool bDidCallback;
 	FNativeCallback NativeCallback;
 
-	typedef const TArray<FOSSLeaderboardsLeaderboardEntry> &ResultType;
+	typedef const TArray<FMOSLeaderboardsLeaderboardEntry> &ResultType;
 
 	UFUNCTION(BlueprintCallable, Category = "Callbacks")
 	void OnResult(
 		bool bWasSuccessful,
-		const TArray<FOSSLeaderboardsLeaderboardEntry> &Results,
+		const TArray<FMOSLeaderboardsLeaderboardEntry> &Results,
 		const FString &ErrorMessage);
 };

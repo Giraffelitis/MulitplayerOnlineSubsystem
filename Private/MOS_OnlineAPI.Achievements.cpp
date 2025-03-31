@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "Interfaces/OnlineAchievementsInterface.h"
 #include "OnlineSubsystemUtils.h"
@@ -14,7 +14,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAchievementsQueryAchievements(
     {
         Result->OnResult(
             false,
-            TArray<FOSSAchievementsAchievementState>(),
+            TArray<FMOSAchievementsAchievementState>(),
             TEXT("Online subsystem is not available."));
         return;
     }
@@ -31,7 +31,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAchievementsQueryAchievements(
     {
         Result->OnResult(
             false,
-            TArray<FOSSAchievementsAchievementState>(),
+            TArray<FMOSAchievementsAchievementState>(),
             TEXT("Online subsystem does not support achievements."));
         return;
     }
@@ -57,7 +57,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAchievementsQueryAchievements(
                 {
                     ResultWk->OnResult(
                         false,
-                        TArray<FOSSAchievementsAchievementState>(),
+                        TArray<FMOSAchievementsAchievementState>(),
                         TEXT("QueryAchievementDescriptions call failed."));
                     return;
                 }
@@ -79,7 +79,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAchievementsQueryAchievements(
                             {
                                 ResultWk->OnResult(
                                     false,
-                                    TArray<FOSSAchievementsAchievementState>(),
+                                    TArray<FMOSAchievementsAchievementState>(),
                                     TEXT("QueryAchievements call failed."));
                                 return;
                             }
@@ -91,7 +91,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAchievementsQueryAchievements(
                             {
                                 ResultWk->OnResult(
                                     false,
-                                    TArray<FOSSAchievementsAchievementState>(),
+                                    TArray<FMOSAchievementsAchievementState>(),
                                     TEXT("GetCachedAchievements call failed."));
                                 return;
                             }
@@ -99,7 +99,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAchievementsQueryAchievements(
                             // Now we have cached both the achievement descriptions and the achievement states, we can
                             // put both of them together to return a list of achievements and the current user's
                             // progress.
-                            TArray<FOSSAchievementsAchievementState> States;
+                            TArray<FMOSAchievementsAchievementState> States;
                             for (const auto &CurrentAchievement : CurrentAchievements)
                             {
                                 FOnlineAchievementDesc AchievementDescription;
@@ -107,7 +107,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAchievementsQueryAchievements(
                                         CurrentAchievement.Id,
                                         AchievementDescription) == EOnlineCachedResult::Success)
                                 {
-                                    FOSSAchievementsAchievementState State;
+                                    FMOSAchievementsAchievementState State;
                                     State.Id = CurrentAchievement.Id;
                                     State.DisplayName = AchievementDescription.Title;
                                     State.Progress = static_cast<float>(CurrentAchievement.Progress);

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_AsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_AsyncResult.h"
 
 void UMOS_AsyncResult::OnResult(bool bWasSuccessful, const FString& ErrorMessage)
 {

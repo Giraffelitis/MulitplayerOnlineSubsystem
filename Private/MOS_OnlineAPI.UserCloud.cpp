@@ -1,8 +1,8 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_SaveGame.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_SaveGame.h"
 #include "Interfaces/OnlineUserCloudInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "OnlineSubsystemUtils.h"
@@ -14,7 +14,7 @@ void UMOS_GameInstanceSubsystem::ExecuteUserCloudQueryFiles(UMOS_ListAsyncResult
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        Result->OnResult(false, TArray<FOSSInterfaceListEntry>(), TEXT("Online subsystem is not available."));
+        Result->OnResult(false, TArray<FMOSInterfaceListEntry>(), TEXT("Online subsystem is not available."));
         return;
     }
 
@@ -30,7 +30,7 @@ void UMOS_GameInstanceSubsystem::ExecuteUserCloudQueryFiles(UMOS_ListAsyncResult
     {
         Result->OnResult(
             false,
-            TArray<FOSSInterfaceListEntry>(),
+            TArray<FMOSInterfaceListEntry>(),
             TEXT("Online subsystem does not support user cloud."));
         return;
     }
@@ -61,19 +61,19 @@ void UMOS_GameInstanceSubsystem::ExecuteUserCloudQueryFiles(UMOS_ListAsyncResult
                 {
                     ResultWk->OnResult(
                         false,
-                        TArray<FOSSInterfaceListEntry>(),
+                        TArray<FMOSInterfaceListEntry>(),
                         TEXT("User cloud enumeration failed."));
                     UserCloud->ClearOnEnumerateUserFilesCompleteDelegate_Handle(*CallbackHandle);
                     return;
                 }
 
                 // Otherwise, convert the results.
-                TArray<FOSSInterfaceListEntry> Entries;
+                TArray<FMOSInterfaceListEntry> Entries;
                 TArray<FCloudFileHeader> UserCloudFiles;
                 UserCloud->GetUserFileList(*UserId, UserCloudFiles);
                 for (const auto &UserCloudFile : UserCloudFiles)
                 {
-                    FOSSInterfaceListEntry Entry;
+                    FMOSInterfaceListEntry Entry;
                     Entry.Id = UserCloudFile.FileName;
                     Entry.DisplayName = FText::FromString(UserCloudFile.FileName);
                     Entries.Add(Entry);

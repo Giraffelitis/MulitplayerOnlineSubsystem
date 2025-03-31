@@ -1,6 +1,6 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
 #include "Interfaces/OnlineFriendsInterface.h"
 #include "Interfaces/OnlinePartyInterface.h"
@@ -95,13 +95,13 @@ TArray<FUniqueNetIdRepl> UMOS_GameInstanceSubsystem::GetFriendsCurrentFriends() 
     return CurrentFriendIds;
 }
 
-FOSSFriendsFriendState UMOS_GameInstanceSubsystem::GetFriendsFriendState(const FUniqueNetIdRepl &TargetUserId) const
+FMOSFriendsFriendState UMOS_GameInstanceSubsystem::GetFriendsFriendState(const FUniqueNetIdRepl &TargetUserId) const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return FOSSFriendsFriendState();
+        return FMOSFriendsFriendState();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -114,14 +114,14 @@ FOSSFriendsFriendState UMOS_GameInstanceSubsystem::GetFriendsFriendState(const F
     auto Friends = OSS->GetFriendsInterface();
     if (!Friends.IsValid())
     {
-        return FOSSFriendsFriendState();
+        return FMOSFriendsFriendState();
     }
 
     // Attempt to get the target user's friend information.
     auto TargetFriend = Friends->GetFriend(this->LocalUserNum, *TargetUserId, TEXT(""));
     if (!TargetFriend.IsValid())
     {
-        return FOSSFriendsFriendState();
+        return FMOSFriendsFriendState();
     }
 
     // Attempt to get the party ID.
@@ -137,30 +137,30 @@ FOSSFriendsFriendState UMOS_GameInstanceSubsystem::GetFriendsFriendState(const F
     }
 
     // Convert the main state.
-    FOSSFriendsFriendState State;
+    FMOSFriendsFriendState State;
     State.Id = TargetFriend->GetUserId();
     State.DisplayName = TargetFriend->GetDisplayName();
     State.RealName = TargetFriend->GetRealName();
     switch (TargetFriend->GetInviteStatus())
     {
     case EInviteStatus::Accepted:
-        State.InvitationStatus = EOSSFriendsFriendInvitationStatus::Accepted;
+        State.InvitationStatus = EMOSFriendsFriendInvitationStatus::Accepted;
         break;
     case EInviteStatus::PendingInbound:
-        State.InvitationStatus = EOSSFriendsFriendInvitationStatus::PendingInbound;
+        State.InvitationStatus = EMOSFriendsFriendInvitationStatus::PendingInbound;
         break;
     case EInviteStatus::PendingOutbound:
-        State.InvitationStatus = EOSSFriendsFriendInvitationStatus::PendingOutbound;
+        State.InvitationStatus = EMOSFriendsFriendInvitationStatus::PendingOutbound;
         break;
     case EInviteStatus::Blocked:
-        State.InvitationStatus = EOSSFriendsFriendInvitationStatus::Blocked;
+        State.InvitationStatus = EMOSFriendsFriendInvitationStatus::Blocked;
         break;
     case EInviteStatus::Suggested:
-        State.InvitationStatus = EOSSFriendsFriendInvitationStatus::Suggested;
+        State.InvitationStatus = EMOSFriendsFriendInvitationStatus::Suggested;
         break;
     case EInviteStatus::Unknown:
     default:
-        State.InvitationStatus = EOSSFriendsFriendInvitationStatus::Unknown;
+        State.InvitationStatus = EMOSFriendsFriendInvitationStatus::Unknown;
         break;
     }
     const auto &Presence = TargetFriend->GetPresence();
@@ -176,23 +176,23 @@ FOSSFriendsFriendState UMOS_GameInstanceSubsystem::GetFriendsFriendState(const F
     switch (Presence.Status.State)
     {
     case EOnlinePresenceState::Online:
-        State.PresenceStatusState = EOSSFriendsFriendPresenceStatus::Online;
+        State.PresenceStatusState = EMOSFriendsFriendPresenceStatus::Online;
         break;
     case EOnlinePresenceState::Away:
-        State.PresenceStatusState = EOSSFriendsFriendPresenceStatus::Away;
+        State.PresenceStatusState = EMOSFriendsFriendPresenceStatus::Away;
         break;
     case EOnlinePresenceState::ExtendedAway:
-        State.PresenceStatusState = EOSSFriendsFriendPresenceStatus::ExtendedAway;
+        State.PresenceStatusState = EMOSFriendsFriendPresenceStatus::ExtendedAway;
         break;
     case EOnlinePresenceState::DoNotDisturb:
-        State.PresenceStatusState = EOSSFriendsFriendPresenceStatus::DoNotDisturb;
+        State.PresenceStatusState = EMOSFriendsFriendPresenceStatus::DoNotDisturb;
         break;
     case EOnlinePresenceState::Chat:
-        State.PresenceStatusState = EOSSFriendsFriendPresenceStatus::Chat;
+        State.PresenceStatusState = EMOSFriendsFriendPresenceStatus::Chat;
         break;
     case EOnlinePresenceState::Offline:
     default:
-        State.PresenceStatusState = EOSSFriendsFriendPresenceStatus::Offline;
+        State.PresenceStatusState = EMOSFriendsFriendPresenceStatus::Offline;
         break;
     }
     for (const auto &KV : Presence.Status.Properties)
@@ -651,13 +651,13 @@ void UMOS_GameInstanceSubsystem::ExecuteFriendsQueryRecentPlayers(UMOS_AsyncResu
     }
 }
 
-TArray<FOSSFriendsRecentPlayerState> UMOS_GameInstanceSubsystem::GetFriendsCurrentRecentPlayers() const
+TArray<FMOSFriendsRecentPlayerState> UMOS_GameInstanceSubsystem::GetFriendsCurrentRecentPlayers() const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return TArray<FOSSFriendsRecentPlayerState>();
+        return TArray<FMOSFriendsRecentPlayerState>();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -670,17 +670,17 @@ TArray<FOSSFriendsRecentPlayerState> UMOS_GameInstanceSubsystem::GetFriendsCurre
     auto Friends = OSS->GetFriendsInterface();
     if (!Friends.IsValid())
     {
-        return TArray<FOSSFriendsRecentPlayerState>();
+        return TArray<FMOSFriendsRecentPlayerState>();
     }
 
     // Get the recent players.
-    TArray<FOSSFriendsRecentPlayerState> Results;
+    TArray<FMOSFriendsRecentPlayerState> Results;
     TArray<TSharedRef<FOnlineRecentPlayer>> RecentPlayers;
     if (Friends->GetRecentPlayers(*UserId, TEXT(""), RecentPlayers))
     {
         for (const auto &RecentPlayer : RecentPlayers)
         {
-            FOSSFriendsRecentPlayerState State;
+            FMOSFriendsRecentPlayerState State;
             State.Id = RecentPlayer->GetUserId();
             State.DisplayName = RecentPlayer->GetDisplayName();
             Results.Add(State);
@@ -887,13 +887,13 @@ void UMOS_GameInstanceSubsystem::ExecuteFriendsQueryBlockedPlayers(UMOS_AsyncRes
     }
 }
 
-TArray<FOSSFriendsBlockedPlayerState> UMOS_GameInstanceSubsystem::GetFriendsCurrentBlockedPlayers() const
+TArray<FMOSFriendsBlockedPlayerState> UMOS_GameInstanceSubsystem::GetFriendsCurrentBlockedPlayers() const
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        return TArray<FOSSFriendsBlockedPlayerState>();
+        return TArray<FMOSFriendsBlockedPlayerState>();
     }
 
     // Get the identity interface and the currently signed in user.
@@ -906,17 +906,17 @@ TArray<FOSSFriendsBlockedPlayerState> UMOS_GameInstanceSubsystem::GetFriendsCurr
     auto Friends = OSS->GetFriendsInterface();
     if (!Friends.IsValid())
     {
-        return TArray<FOSSFriendsBlockedPlayerState>();
+        return TArray<FMOSFriendsBlockedPlayerState>();
     }
 
     // Get the blocked players.
-    TArray<FOSSFriendsBlockedPlayerState> Results;
+    TArray<FMOSFriendsBlockedPlayerState> Results;
     TArray<TSharedRef<FOnlineBlockedPlayer>> BlockedPlayers;
     if (Friends->GetBlockedPlayers(*UserId, BlockedPlayers))
     {
         for (const auto &BlockedPlayer : BlockedPlayers)
         {
-            FOSSFriendsBlockedPlayerState State;
+            FMOSFriendsBlockedPlayerState State;
             State.Id = BlockedPlayer->GetUserId();
             State.DisplayName = BlockedPlayer->GetDisplayName();
             Results.Add(State);

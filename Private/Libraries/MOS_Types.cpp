@@ -1,7 +1,7 @@
 // Copyright Grumpy Giraffe Games. All Rights Reserved.
 
 
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_Types.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_Types.h"
 
 FUIListEntry::FUIListEntry(const FString &InId, const FText &InDisplayName)
 	: Id(InId)
@@ -9,8 +9,8 @@ FUIListEntry::FUIListEntry(const FString &InId, const FText &InDisplayName)
 {
 }
 
-void FOSSInterfaceListEntry::SynchroniseToComboBoxList(
-	const TArray<FOSSInterfaceListEntry> &InOptions,
+void FMOSInterfaceListEntry::SynchroniseToComboBoxList(
+	const TArray<FMOSInterfaceListEntry> &InOptions,
 	TArray<FUIListEntryPtr> &InOutComboBoxList)
 {
 	// Remove any combo list entries that aren't valid (somehow).

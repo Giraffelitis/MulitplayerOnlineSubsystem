@@ -1,9 +1,9 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSusbsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
 
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_SessionsFindSessionsAsyncResult.h"
-#include "MultiplayerOnlineSusbsystem/Public/Libraries/MOS_Types.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_SessionsFindSessionsAsyncResult.h"
+#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_Types.h"
 #include "Interfaces/OnlinePartyInterface.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Online/OnlineSessionNames.h"
@@ -11,7 +11,7 @@
 #include "DebugPlus/Public/DP_EnhancedLogging.h"
 
 
-void UMOS_GameInstanceSubsystem::GetSessionInfo(const FOSSSessionsSearchResult& SearchResult)
+void UMOS_GameInstanceSubsystem::GetSessionInfo(const FMOSSessionsSearchResult& SearchResult)
 {
     PingInMs = SearchResult.PingInMs;
     SessionInfo = SearchResult.Session.SessionInfo->ToString();
@@ -27,7 +27,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        Result->OnResult(false, TArray<FOSSSessionsSearchResult>(), TEXT("Online subsystem is not available."));
+        Result->OnResult(false, TArray<FMOSSessionsSearchResult>(), TEXT("Online subsystem is not available."));
         return;
     }
 
@@ -37,7 +37,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     auto UserId = Identity->GetUniquePlayerId(this->LocalUserNum);
     if (!UserId.IsValid())
     {
-        Result->OnResult(false, TArray<FOSSSessionsSearchResult>(), TEXT("The local user is not signed in."));
+        Result->OnResult(false, TArray<FMOSSessionsSearchResult>(), TEXT("The local user is not signed in."));
         return;
     }
 
@@ -47,7 +47,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     {
         Result->OnResult(
             false,
-            TArray<FOSSSessionsSearchResult>(),
+            TArray<FMOSSessionsSearchResult>(),
             TEXT("Online subsystem does not support sessions."));
         return;
     }
@@ -85,7 +85,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
                 // Return if the read failed.
                 if (SearchObject->SearchState == EOnlineAsyncTaskState::Failed)
                 {
-                    ResultWk->OnResult(false, TArray<FOSSSessionsSearchResult>(), TEXT("Session search failed."));
+                    ResultWk->OnResult(false, TArray<FMOSSessionsSearchResult>(), TEXT("Session search failed."));
                     Session->ClearOnFindSessionsCompleteDelegate_Handle(*CallbackHandle);
                     return;
                 }
@@ -103,7 +103,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
 
                         SessionResults.Add(Entry);
                         
-                        FOSSSessionsSearchResult CachedEntry;
+                        FMOSSessionsSearchResult CachedEntry;
                         CachedEntry.Session = Row.Session;
                         CachedEntry.PingInMs = Row.PingInMs;
                         
@@ -121,7 +121,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     // Search for all sessions.
     if (!Session->FindSessions(this->LocalUserNum, SearchObject))
     {
-        Result->OnResult(true, TArray<FOSSSessionsSearchResult>(), TEXT("FindSessions call failed to start."));
+        Result->OnResult(true, TArray<FMOSSessionsSearchResult>(), TEXT("FindSessions call failed to start."));
         Session->ClearOnFindSessionsCompleteDelegate_Handle(*CallbackHandle);
     }
 }
@@ -312,7 +312,7 @@ void UMOS_GameInstanceSubsystem::OnCreateSessionComplete(const FName InSessionNa
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsJoinSession(
-    const FOSSSessionsSearchResult &SearchResult,
+    const FMOSSessionsSearchResult &SearchResult,
     FName SessionName,
     UMOS_AsyncResult *Result)
 {
@@ -440,7 +440,7 @@ void UMOS_GameInstanceSubsystem::OnJoinSessionComplete(FName InSessionName, EOnJ
     GEngine->SetClientTravel(this->GetWorld(), *ConnectInfo, TRAVEL_Absolute);
 }
 
-void UMOS_GameInstanceSubsystem::ExecuteSessionsJoinSessionWithParty(const FOSSSessionsSearchResult &SearchResult, FName SessionName, UMOS_AsyncResult *Result)
+void UMOS_GameInstanceSubsystem::ExecuteSessionsJoinSessionWithParty(const FMOSSessionsSearchResult &SearchResult, FName SessionName, UMOS_AsyncResult *Result)
 {
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
