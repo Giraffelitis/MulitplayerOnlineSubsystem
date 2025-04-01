@@ -47,10 +47,12 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameIn
 	
 public:
 
-	UPROPERTY(BlueprintReadOnly, Category = "OSS")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS")
 	TArray<FMOSSessionsSearchResult> CachedFindSessionResults;
-	UPROPERTY(BlueprintReadOnly, Category = "OSS")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS")
 	UMOS_AsyncResult* AsyncResult;
+	UPROPERTY(BlueprintReadOnly, Category = "MOS")
+	UMOS_SessionsFindSessionsAsyncResult* FindSessionsAsyncResult;
 	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
 	int PingInMs = 999;
 	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
@@ -67,15 +69,15 @@ public:
 	bool GetIsAttemptingLogin() {return bIsAttemptingLogin;}
 	UFUNCTION(BlueprintCallable)
 	bool GetDoesAutoLogin() {return bDoesAutoLogin;}
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (DisplayName = "LocalUserNum", Category = "OSS"))
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (DisplayName = "LocalUserNum", Category = "MOS"))
 	int32 LocalUserNum = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OSS")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
 	int32 SessionAvailableSlots = 2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OSS")
-	FName OSSSessionName = "OOLobby";
-	UPROPERTY(BlueprintReadWrite, Category = "OSS")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
+	FName MOSSessionName = "OOLobby";
+	UPROPERTY(BlueprintReadWrite, Category = "MOS")
 	UMOS_SessionsFindSessionsAsyncResult* PersistentFindSessionsResult;
-	UPROPERTY(BlueprintReadWrite, Category = "OSS")
+	UPROPERTY(BlueprintReadWrite, Category = "MOS")
 	UMOS_AsyncResult* PersistentAsyncResult;
     // @note: This is overridden so we can delete the voice chat user when this instance is destroyed.
     ~UMOS_GameInstanceSubsystem();
@@ -105,7 +107,7 @@ public:
 	void OnLogoutCompleted(int InUserNum, bool bWasSuccessful);
 	
     bool GetAuthCanLinkCrossPlatformAccount() const;
-	UFUNCTION( BlueprintCallable, meta = (DisplayName = "GetAuthCanLinkCrossPlatformAccount", Category = "Auth"))
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "GetAuthCanLinkCrossPlatformAccount", Category = "Auth"))
 	void GetSessionInfo(const FMOSSessionsSearchResult &SearchResult);
 	
     /* SESSIONS */

@@ -59,14 +59,13 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     SearchObject->QuerySettings.Set(SEARCH_KEYWORDS, FString("OOLobby"), EOnlineComparisonOp::Equals);
     
     /*search for non-listening sessions*/
-    SearchObject->QuerySettings.Set(FName(TEXT("__EOS_bListening")), false , EOnlineComparisonOp::Equals);
+ //   SearchObject->QuerySettings.Set(FName(TEXT("__EOS_bListening")), false , EOnlineComparisonOp::Equals);
     /*Show lobbies that are full*/
     SearchObject->QuerySettings.SearchParams.Add(FName(TEXT("minslotsavailable")), FOnlineSessionSearchParam((int64)0L, EOnlineComparisonOp::GreaterThanEquals));
     
     // Register an event so we can receive the query outcome.
     auto CallbackHandle = MakeShared<FDelegateHandle>();
-    *CallbackHandle =
-        Session->AddOnFindSessionsCompleteDelegate_Handle(FOnFindSessionsCompleteDelegate::CreateWeakLambda(
+    *CallbackHandle = Session->AddOnFindSessionsCompleteDelegate_Handle(FOnFindSessionsCompleteDelegate::CreateWeakLambda(
             this, [this, Session, CallbackHandle, ResultWk = TSoftObjectPtr<UMOS_SessionsFindSessionsAsyncResult>(Result), SearchObject](bool bCallbackWasSuccessful)
             {
                 // Check if this callback is for us.
@@ -135,6 +134,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsStartListenServer(int32 Availabl
     if (IsValid(CurrentWorld))
     {
         SessionAvailableSlots = AvailableSlots;
+        SessionAvailableSlots = 2;
     }
     
     Start(SessionAvailableSlots);
@@ -176,7 +176,7 @@ void UMOS_GameInstanceSubsystem::OnMapListening(const UWorld::FActorsInitialized
     FWorldDelegates::OnWorldInitializedActors.Remove(WorldInitHandle);
     WorldInitHandle.Reset();
 
-    ExecuteSessionsCreateSession(OSSSessionName, PersistentAsyncResult);
+    ExecuteSessionsCreateSession(MOSSessionName, PersistentAsyncResult);
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsCreateSession(FName SessionName, UMOS_AsyncResult *Result)
@@ -305,7 +305,7 @@ void UMOS_GameInstanceSubsystem::OnCreateSessionComplete(const FName InSessionNa
             }
 
            // GameMode.Player
-            
+            //OnCreateSessionComplete
             GetWorld()->ServerTravel("/Game/OO/Maps/Bedroom", true);
         }
     }
@@ -434,7 +434,7 @@ void UMOS_GameInstanceSubsystem::OnJoinSessionComplete(FName InSessionName, EOnJ
     // Get the Player Controller.
     
     FString ConnectInfo;
-    Session->GetResolvedConnectString(OSSSessionName, ConnectInfo);
+    Session->GetResolvedConnectString(MOSSessionName, ConnectInfo);
     DP_LOG(OOGameInstance, Warning, "ConnectionInfo: %s", *ConnectInfo);
 
     GEngine->SetClientTravel(this->GetWorld(), *ConnectInfo, TRAVEL_Absolute);
