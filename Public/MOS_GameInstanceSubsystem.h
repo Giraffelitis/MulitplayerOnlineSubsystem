@@ -22,6 +22,7 @@
 
 #include "MOS_GameInstanceSubsystem.generated.h"
 
+class UMOS_SessionsFindSessionsAsyncResult;
 class FOnlineSessionSearchResult;
 class IOnlineSubsystem;
 
