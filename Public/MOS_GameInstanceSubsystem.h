@@ -75,7 +75,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
 	int32 SessionAvailableSlots = 2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
-	FName MOSSessionName = NAME_GameSession;
+	FName MOSSessionName = "MyLocalSessionName";
 	UPROPERTY(BlueprintReadWrite, Category = "MOS")
 	UMOS_SessionsFindSessionsAsyncResult* PersistentFindSessionsResult;
 	UPROPERTY(BlueprintReadWrite, Category = "MOS")
