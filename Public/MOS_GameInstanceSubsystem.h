@@ -44,8 +44,6 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameIn
 	bool bDoesAutoLogin = true;
 	bool bIsAttemptingLogin = false;
 	TArray<FOnlineSessionSearchResult> SessionResults;
-
-	FString GetTravelCommandString();
 	
 public:
 
@@ -78,9 +76,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
 	TSubclassOf<AGameModeBase> TravelGameMode = TSubclassOf<AGameModeBase>(AGameModeBase::StaticClass());
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
+	FName ListenLevel = "Game/Maps/TransitionMap";
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
 	FName TravelLevel = "Game/Maps/ExampleMap";
 	UFUNCTION(BlueprintCallable, Category = "MOS")
-	void SetTravelParameters(const FName LevelName, const TSubclassOf<AGameModeBase> GameMode);
+	void SetTravelParameters(const FName InListenLevel, const FName InTravelLevel, const TSubclassOf<AGameModeBase> InGameMode);
 	
 	
     // @note: This is overridden so we can delete the voice chat user when this instance is destroyed.

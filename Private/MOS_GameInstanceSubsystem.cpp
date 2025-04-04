@@ -45,8 +45,9 @@ void UMOS_GameInstanceSubsystem::RaisePartiesOnPartiesStateChanged()
 {
 }
 
-void UMOS_GameInstanceSubsystem::SetTravelParameters(const FName LevelName, const TSubclassOf<AGameModeBase> GameMode)
+void UMOS_GameInstanceSubsystem::SetTravelParameters(const FName InListenLevel, const FName InTravelLevel, const TSubclassOf<AGameModeBase> InGameMode)
 {
-	TravelLevel = LevelName;
-	TravelGameMode = GameMode;
+	ListenLevel = InListenLevel;
+	TravelLevel = InTravelLevel;
+	TravelGameMode = InGameMode;
 }
