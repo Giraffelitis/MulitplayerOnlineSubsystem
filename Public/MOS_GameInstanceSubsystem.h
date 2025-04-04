@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "OnlineSessionSettings.h"
 #include "VoiceChat.h"
+#include "GameFramework/GameModeBase.h"
 #include "Interfaces/OnlineSessionInterface.h"
 
 #include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_AsyncResult.h"
@@ -42,9 +43,9 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameIn
 	
 	bool bDoesAutoLogin = true;
 	bool bIsAttemptingLogin = false;
-	UPROPERTY()
-	UMOS_GameInstanceSubsystem* OSSInstance;
 	TArray<FOnlineSessionSearchResult> SessionResults;
+
+	FString GetTravelCommandString();
 	
 public:
 
@@ -54,38 +55,45 @@ public:
 	UMOS_AsyncResult* AsyncResult;
 	UPROPERTY(BlueprintReadOnly, Category = "MOS")
 	UMOS_SessionsFindSessionsAsyncResult* FindSessionsAsyncResult;
-	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	int PingInMs = 999;
-	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	FString SessionInfo = "";
-	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	FString SessionUniqueNetID = "";
-	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	FString SessionOwnerName = "";
-	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	int OpenPublicConnections = 999;
-	UPROPERTY(BlueprintReadOnly, Category = "Sessions")
+	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	int OpenPrivateConnections = 999;
-	UFUNCTION(BlueprintCallable)
-	bool GetIsAttemptingLogin() {return bIsAttemptingLogin;}
-	UFUNCTION(BlueprintCallable)
-	bool GetDoesAutoLogin() {return bDoesAutoLogin;}
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (DisplayName = "LocalUserNum", Category = "MOS"))
 	int32 LocalUserNum = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS|Sessions")
 	int32 SessionAvailableSlots = 2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
+	/*This must match the session name in the game mode*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS|Sessions")
 	FName MOSSessionName = "MyLocalSessionName";
-	UPROPERTY(BlueprintReadWrite, Category = "MOS")
-	UMOS_SessionsFindSessionsAsyncResult* PersistentFindSessionsResult;
-	UPROPERTY(BlueprintReadWrite, Category = "MOS")
-	UMOS_AsyncResult* PersistentAsyncResult;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
+	TSubclassOf<AGameModeBase> TravelGameMode = TSubclassOf<AGameModeBase>(AGameModeBase::StaticClass());
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS")
+	FName TravelLevel = "Game/Maps/ExampleMap";
+	UFUNCTION(BlueprintCallable, Category = "MOS")
+	void SetTravelParameters(const FName LevelName, const TSubclassOf<AGameModeBase> GameMode);
+	
+	
     // @note: This is overridden so we can delete the voice chat user when this instance is destroyed.
     ~UMOS_GameInstanceSubsystem();
 
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	void RegisterEvents();
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsAttemptingLogin() {return bIsAttemptingLogin;}
+	UFUNCTION(BlueprintCallable)
+	bool GetDoesAutoLogin() {return bDoesAutoLogin;}
 	
     /* AUTH */
 	
@@ -121,7 +129,7 @@ public:
     UFUNCTION(BlueprintCallable)
     void ExecuteSessionsStartListenServer(int32 AvailableSlots);
 	void OnMapListening(const UWorld::FActorsInitializedParams& ActorInitParams);
-	void Start(int32 AvailableSlots);
+	void StartListenServer(int32 AvailableSlots);
 	UFUNCTION(BlueprintCallable)
     void ExecuteSessionsCreateSession(FName SessionName, UMOS_AsyncResult *Result);
 	void OnCreateSessionComplete(FName InSessionName, bool bWasSuccessful);

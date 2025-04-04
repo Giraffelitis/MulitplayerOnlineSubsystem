@@ -9,6 +9,7 @@
 #include "Online/OnlineSessionNames.h"
 #include "OnlineSubsystemUtils.h"
 #include "DebugPlus/Public/DP_EnhancedLogging.h"
+#include "GameFramework/GameModeBase.h"
 
 
 void UMOS_GameInstanceSubsystem::GetSessionInfo(const FMOSSessionsSearchResult& SearchResult)
@@ -125,22 +126,21 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     }
 }
 
-void UMOS_GameInstanceSubsystem::ExecuteSessionsStartListenServer(int32 AvailableSlots)
+void UMOS_GameInstanceSubsystem::ExecuteSessionsStartListenServer(int32 InAvailableSlots)
 {
     // We need somewhere to store session settings between the main menu and multiplayer map, so that when CreateSession
     // is called on the multiplayer map, it can retrieve the settings that were used to start the listen server. In this
     // example we use the game instance.
+    ensureMsgf(InAvailableSlots > 0, TEXT("InAvailableSlots must be greater than 0"));
+    
     auto *CurrentWorld = this->GetWorld();
     if (IsValid(CurrentWorld))
     {
-        SessionAvailableSlots = AvailableSlots;
-        SessionAvailableSlots = 2;
+       StartListenServer(InAvailableSlots);
     }
-    
-    Start(SessionAvailableSlots);
 }
 
-void UMOS_GameInstanceSubsystem::Start(int32 AvailableSlots)
+void UMOS_GameInstanceSubsystem::StartListenServer(int32 InAvailableSlots)
 {
     if (GEngine == nullptr)
     {
@@ -152,9 +152,10 @@ void UMOS_GameInstanceSubsystem::Start(int32 AvailableSlots)
 
     // Figure out the world context from the online subsystem.
     DP_LOG(OOGameInstance, Verbose, "Starting listen server");
+    // Setting the travel URL to the multiplayer map.
+    FString TravelCommand = GetTravelCommandString() + FString::Printf(TEXT("?MaxPlayers=%d"), InAvailableSlots);
     // Start the listen server by browsing to the multiplayer map.
-    GEngine->SetClientTravel(this->GetWorld(), *FString::Printf(TEXT("/Game/OO/Maps/Transition?Listen?Game=/Script/OO_Prototype.OO_BaseGameMode?MaxPlayers=%d"), AvailableSlots), TRAVEL_Absolute);
-    
+    GEngine->SetClientTravel(this->GetWorld(), *TravelCommand, TRAVEL_Absolute);
 }
 
 void UMOS_GameInstanceSubsystem::OnMapListening(const UWorld::FActorsInitializedParams &ActorInitParams)
@@ -176,7 +177,7 @@ void UMOS_GameInstanceSubsystem::OnMapListening(const UWorld::FActorsInitialized
     FWorldDelegates::OnWorldInitializedActors.Remove(WorldInitHandle);
     WorldInitHandle.Reset();
 
-    ExecuteSessionsCreateSession(MOSSessionName, PersistentAsyncResult);
+    ExecuteSessionsCreateSession(MOSSessionName, AsyncResult);
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsCreateSession(FName SessionName, UMOS_AsyncResult *Result)
@@ -265,8 +266,8 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsCreateSession(FName SessionName,
 
 void UMOS_GameInstanceSubsystem::OnCreateSessionComplete(const FName InSessionName, const bool bWasSuccessful)
 {
-    DP_LOG(OOGameInstance, Warning, "Create Session: %hs", bWasSuccessful ? "Success" : "Failed");
-    DP_LOG(OOGameInstance, Warning, "Session Name: %s", *InSessionName.ToString());
+    DP_LOG(OOGameInstance, Verbose, "Create Session: %hs", bWasSuccessful ? "Success" : "Failed");
+    DP_LOG(OOGameInstance, Verbose, "Session Name: %s", *InSessionName.ToString());
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
@@ -303,10 +304,9 @@ void UMOS_GameInstanceSubsystem::OnCreateSessionComplete(const FName InSessionNa
                 DP_LOG(OOGameInstance, Warning, "GameMode is not valid.");
                 return;
             }
-
-           // GameMode.Player
-            //OnCreateSessionComplete
-            GetWorld()->ServerTravel("/Game/OO/Maps/Bedroom", true);
+            // Setting the travel URL to the multiplayer map.
+            FString TravelCommand = GetTravelCommandString();
+            GetWorld()->ServerTravel(TravelCommand, true);
         }
     }
 }
@@ -434,7 +434,7 @@ void UMOS_GameInstanceSubsystem::OnJoinSessionComplete(FName InSessionName, EOnJ
     // Get the Player Controller.
     
     FString ConnectInfo;
-    Session->GetResolvedConnectString(MOSSessionName, ConnectInfo);
+    Session->GetResolvedConnectString(InSessionName, ConnectInfo);
     DP_LOG(OOGameInstance, Warning, "ConnectionInfo: %s", *ConnectInfo);
 
     GEngine->SetClientTravel(this->GetWorld(), *ConnectInfo, TRAVEL_Absolute);
@@ -1049,4 +1049,17 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsReturnToMainMenu()
 {
     // Move back to the main menu map.
     GEngine->SetClientTravel(this->GetWorld(), TEXT("/Game/OO/Maps/MainMenu"), TRAVEL_Absolute);
+}
+
+FString UMOS_GameInstanceSubsystem::GetTravelCommandString()
+{
+    ensureMsgf(TravelLevel != "", TEXT("You must set the TravelLevel via SetTravelParameters(). Function is BlueptintCallable."));
+    ensureMsgf(IsValid(TravelGameMode), TEXT("You must set the TravelGameMode via SetTravelParameters(). Function is BlueptintCallable."));
+
+    //Get the level path
+    FString LevelPath = TravelLevel.ToString();
+    // Get the GameMode class path
+    FString GameModePath = TravelGameMode->GetPathName();
+    
+    return LevelPath + TEXT("?Game=") + GameModePath;
 }
