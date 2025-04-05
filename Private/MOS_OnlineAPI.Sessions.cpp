@@ -153,7 +153,7 @@ void UMOS_GameInstanceSubsystem::StartListenServer(int32 InAvailableSlots)
     WorldInitHandle = FWorldDelegates::OnWorldInitializedActors.AddUObject(this, &UMOS_GameInstanceSubsystem::OnMapListening);
 
     // Figure out the world context from the online subsystem.
-    DP_LOG(MOSGameInstanceSubsystem, Verbose, "Starting listen server");
+    DP_LOG(MOSGameInstanceSubsystem, Log, "Starting listen server");
     
     ensureMsgf(ListenLevel != "", TEXT("You must set the ListenLevel via SetTravelParameters(). Function is BlueprintCallable."));
     ensureMsgf(IsValid(TravelGameMode), TEXT("You must set the TravelGameMode via SetTravelParameters(). Function is BlueprintCallable."));
@@ -187,7 +187,7 @@ void UMOS_GameInstanceSubsystem::OnMapListening(const UWorld::FActorsInitialized
         return;
     }
 
-    DP_LOG(MOSGameInstanceSubsystem, Verbose, "Successfully started listen server");
+    DP_LOG(MOSGameInstanceSubsystem, Log, "Successfully started listen server");
     FWorldDelegates::OnWorldInitializedActors.Remove(WorldInitHandle);
     WorldInitHandle.Reset();
 
@@ -280,8 +280,8 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsCreateSession(FName SessionName,
 
 void UMOS_GameInstanceSubsystem::OnCreateSessionComplete(const FName InSessionName, const bool bWasSuccessful)
 {
-    DP_LOG(MOSGameInstanceSubsystem, Error, "Create Session: %hs", bWasSuccessful ? "Success" : "Failed");
-    DP_LOG(MOSGameInstanceSubsystem, Error, "Session Name: %s", *InSessionName.ToString());
+    DP_LOG(MOSGameInstanceSubsystem, Log, "Create Session: %hs", bWasSuccessful ? "Success" : "Failed");
+    DP_LOG(MOSGameInstanceSubsystem, Log, "Session Name: %s", *InSessionName.ToString());
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
@@ -325,6 +325,7 @@ void UMOS_GameInstanceSubsystem::OnCreateSessionComplete(const FName InSessionNa
             GetWorld()->ServerTravel(LevelPath, true);
         }
     }
+    DP_LOG(MOSGameInstanceSubsystem, Log, "OnCreateSession Completed.");
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsJoinSession(
@@ -451,7 +452,7 @@ void UMOS_GameInstanceSubsystem::OnJoinSessionComplete(FName InSessionName, EOnJ
     
     FString ConnectInfo;
     Session->GetResolvedConnectString(InSessionName, ConnectInfo);
-    DP_LOG(MOSGameInstanceSubsystem, Warning, "ConnectionInfo: %s", *ConnectInfo);
+    DP_LOG(MOSGameInstanceSubsystem, Log, "ConnectionInfo: %s", *ConnectInfo);
 
     GEngine->SetClientTravel(this->GetWorld(), *ConnectInfo, TRAVEL_Absolute);
 }

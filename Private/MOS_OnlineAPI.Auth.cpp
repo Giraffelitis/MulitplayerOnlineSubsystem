@@ -181,7 +181,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAuthLogout(UMOS_AsyncResult *Result)
 
 void UMOS_GameInstanceSubsystem::OnLogoutCompleted(int InUserNum, bool bWasSuccessful)
 {
-    DP_LOG(MOSGameInstanceSubsystem, Warning, "Logout Successful: %hs", bWasSuccessful ? "Success" : "Failed");
+    DP_LOG(MOSGameInstanceSubsystem, Log, "Logout Successful: %hs", bWasSuccessful ? "Success" : "Failed");
 }
 
 bool UMOS_GameInstanceSubsystem::GetAuthCanLinkCrossPlatformAccount() const
