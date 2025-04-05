@@ -91,18 +91,18 @@ void UMOS_GameInstanceSubsystem::ExecuteAuthAutoLogin(UMOS_AsyncResult *Result)
 void UMOS_GameInstanceSubsystem::OnLoginCompleted(int InUserNum, bool bWasSuccessful, const FUniqueNetId& UserId, const FString& Error)
 {
     bIsAttemptingLogin = false;
-    DP_LOG(OOGameInstance, Warning, "User Login: %hs %s", bWasSuccessful ? "Success" : "Failed", *UserId.ToString());
+    DP_LOG(MOSGameInstanceSubsystem, Warning, "User Login: %hs %s", bWasSuccessful ? "Success" : "Failed", *UserId.ToString());
 
     if(!bWasSuccessful)
     {
-        DP_LOG(OOGameInstance, Warning, "Error: %s", *Error);
+        DP_LOG(MOSGameInstanceSubsystem, Warning, "Error: %s", *Error);
     }
 
     // Get the online subsystem.
     auto OSS = Online::GetSubsystem(this->GetWorld());
     if (OSS == nullptr)
     {
-        DP_LOG(OOGameInstance, Warning,"Online subsystem is not available.");
+        DP_LOG(MOSGameInstanceSubsystem, Warning,"Online subsystem is not available.");
         return;
     }
 
@@ -110,7 +110,7 @@ void UMOS_GameInstanceSubsystem::OnLoginCompleted(int InUserNum, bool bWasSucces
     auto Identity = OSS->GetIdentityInterface();
     if (!Identity.IsValid())
     {
-        DP_LOG(OOGameInstance, Warning,"Online subsystem does not support identity.");
+        DP_LOG(MOSGameInstanceSubsystem, Warning,"Online subsystem does not support identity.");
         return;
     }
     
@@ -181,7 +181,7 @@ void UMOS_GameInstanceSubsystem::ExecuteAuthLogout(UMOS_AsyncResult *Result)
 
 void UMOS_GameInstanceSubsystem::OnLogoutCompleted(int InUserNum, bool bWasSuccessful)
 {
-    DP_LOG(OOGameInstance, Warning, "Logout Successful: %hs", bWasSuccessful ? "Success" : "Failed");
+    DP_LOG(MOSGameInstanceSubsystem, Warning, "Logout Successful: %hs", bWasSuccessful ? "Success" : "Failed");
 }
 
 bool UMOS_GameInstanceSubsystem::GetAuthCanLinkCrossPlatformAccount() const

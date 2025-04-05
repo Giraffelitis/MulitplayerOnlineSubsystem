@@ -9,7 +9,7 @@
 
 typedef TMap<FString, int32> TMap_FString_int32;
 
-DEFINE_LOG_CATEGORY(OOGameInstance);
+DEFINE_LOG_CATEGORY(MOSGameInstanceSubsystem);
 
 void UMOS_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {	
@@ -32,6 +32,7 @@ void UMOS_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection
 	SessionPtr->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 	SessionPtr->OnFindSessionsCompleteDelegates.AddUObject(this, &ThisClass::OnFindSessionsComplete);
 	SessionPtr->OnJoinSessionCompleteDelegates.AddUObject(this, &ThisClass::OnJoinSessionComplete);
+	SessionPtr->OnRegisterPlayersCompleteDelegates.AddUObject(this, &ThisClass::OnRegisterPlayersComplete);
 
 	FindSessionsAsyncResult = NewObject<UMOS_SessionsFindSessionsAsyncResult>();
 	AsyncResult = NewObject<UMOS_AsyncResult>();

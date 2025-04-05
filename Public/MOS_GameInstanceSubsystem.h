@@ -27,7 +27,7 @@ class UMOS_SessionsFindSessionsAsyncResult;
 class FOnlineSessionSearchResult;
 class IOnlineSubsystem;
 
-DECLARE_LOG_CATEGORY_EXTERN(OOGameInstance, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(MOSGameInstanceSubsystem, Log, All);
 
 UCLASS(Blueprintable)
 class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameInstanceSubsystem
@@ -147,7 +147,9 @@ public:
     void ExecuteSessionsOpenInviteUI(FName SessionName);
     UFUNCTION(BlueprintCallable)
     void ExecuteSessionsDestroySession(FName SessionName, UMOS_AsyncResult *Result);
+	UFUNCTION(BlueprintCallable)
     void ExecuteSessionsRegisterPlayer(FName SessionName, const FUniqueNetIdRepl &PlayerId, bool bWasFromInvite, UMOS_AsyncResult *Result);
+	void OnRegisterPlayersComplete(FName SessionName, const TArray<FUniqueNetIdRef> &PlayerIds, bool bWasSuccessful);
     void ExecuteSessionsUnregisterPlayer(FName SessionName, const FUniqueNetIdRepl &PlayerId, UMOS_AsyncResult *Result);
     void ExecuteSessionsReturnToMainMenu();
 	
