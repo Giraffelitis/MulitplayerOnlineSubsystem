@@ -17,11 +17,11 @@
 void UMOS_GameInstanceSubsystem::GetSessionInfo(const FMOSSessionsSearchResult& SearchResult)
 {
     PingInMs = SearchResult.PingInMs;
-    SessionInfo = SearchResult.Session.SessionInfo->ToString();
-    SessionUniqueNetID = SearchResult.Session.OwningUserId->ToString();
-    SessionOwnerName = SearchResult.Session.OwningUserName;
-    OpenPublicConnections = SearchResult.Session.NumOpenPublicConnections;
-    OpenPrivateConnections = SearchResult.Session.NumOpenPrivateConnections;
+    SessionInfo = SearchResult.SessionSearchResult.Session.SessionInfo->ToString();
+    SessionUniqueNetID = SearchResult.SessionSearchResult.Session.OwningUserId->ToString();
+    SessionOwnerName = SearchResult.SessionSearchResult.Session.OwningUserName;
+    OpenPublicConnections = SearchResult.SessionSearchResult.Session.NumOpenPublicConnections;
+    OpenPrivateConnections = SearchResult.SessionSearchResult.Session.NumOpenPrivateConnections;
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSessionsAsyncResult *Result)
@@ -106,7 +106,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
                         SessionResults.Add(Entry);
                         
                         FMOSSessionsSearchResult CachedEntry;
-                        CachedEntry.Session = Row.Session;
+                        CachedEntry.SessionSearchResult = Row;
                         CachedEntry.PingInMs = Row.PingInMs;
                         
                         CachedFindSessionResults.Add(CachedEntry);
@@ -130,7 +130,20 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
 
 void UMOS_GameInstanceSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
 {
-    MOSFindSessionsCompleteDelegate.Execute();
+    int32 Ping = 999;
+    FString OwningUserName = "Blank User";
+    int32 NumOpenPublicConnections = 0;
+    FString SessionIdOverride = "MOS_Session";
+    
+    for (auto SessionResult : CachedFindSessionResults)
+    {
+        Ping = SessionResult.PingInMs;
+        OwningUserName = SessionResult.SessionSearchResult.Session.OwningUserName;
+        NumOpenPublicConnections = SessionResult.SessionSearchResult.Session.NumOpenPublicConnections;
+        SessionIdOverride = SessionResult.SessionSearchResult.Session.SessionSettings.SessionIdOverride;
+        
+        UpdateFindSessionListDelegate.Broadcast(SessionResult, SessionIdOverride, OwningUserName, Ping, NumOpenPublicConnections);
+    }
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsStartListenServer(int32 InAvailableSlots)
@@ -367,9 +380,10 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsJoinSession(
     FOnlineSessionSearchResult SelectedSession;
      for (auto CurrentSession : SessionResults)
      {
-         if (SearchResult.Session.GetSessionIdStr() == CurrentSession.Session.GetSessionIdStr())
+         if (SearchResult.SessionSearchResult.GetSessionIdStr() == CurrentSession.Session.GetSessionIdStr())
          {
-             SelectedSession.Session = SearchResult.Session;
+             SelectedSession.Session = SearchResult.SessionSearchResult.Session;
+             SelectedSession = SearchResult.SessionSearchResult;
              SelectedSession.PingInMs = SearchResult.PingInMs;
              break;
          }
@@ -490,7 +504,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsJoinSessionWithParty(const FMOSS
         return;
     }
     
-    if (!SearchResult.Session.SessionInfo.IsValid())
+    if (!SearchResult.SessionSearchResult.Session.SessionInfo.IsValid())
     {
         Result->OnResult(false, TEXT("No such search result exists."));
         return;
@@ -499,9 +513,9 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsJoinSessionWithParty(const FMOSS
     FOnlineSessionSearchResult SelectedSession;
     for (auto CurrentSession : SessionResults)
     {
-        if (SearchResult.Session.GetSessionIdStr() == CurrentSession.Session.GetSessionIdStr())
+        if (SearchResult.SessionSearchResult.Session.GetSessionIdStr() == CurrentSession.Session.GetSessionIdStr())
         {
-            SelectedSession.Session = SearchResult.Session;
+            SelectedSession.Session = SearchResult.SessionSearchResult.Session;
             SelectedSession.PingInMs = SearchResult.PingInMs;
             break;
         }

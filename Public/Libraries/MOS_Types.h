@@ -56,7 +56,7 @@ struct MULTIPLAYERONLINESUBSYSTEM_API FMOSSessionsSearchResult
 	GENERATED_BODY()
 
 	/** All advertised session information */
-	FOnlineSession Session;
+	FOnlineSessionSearchResult SessionSearchResult;
 	/** Ping to the search result, MAX_QUERY_PING is unreachable */
 	int32 PingInMs;
 };
