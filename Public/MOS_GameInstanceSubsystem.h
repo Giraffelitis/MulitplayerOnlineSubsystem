@@ -29,6 +29,8 @@ class IOnlineSubsystem;
 
 DECLARE_LOG_CATEGORY_EXTERN(MOSGameInstanceSubsystem, Log, All);
 
+DECLARE_DYNAMIC_DELEGATE(FMOSFindSessionsCompleteDelegate);
+
 UCLASS(Blueprintable)
 class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameInstanceSubsystem
 {
@@ -46,6 +48,8 @@ class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameIn
 	TArray<FOnlineSessionSearchResult> SessionResults;
 	
 public:
+
+	FMOSFindSessionsCompleteDelegate MOSFindSessionsCompleteDelegate;
 
 	UPROPERTY(BlueprintReadOnly, Category = "MOS")
 	TArray<FMOSSessionsSearchResult> CachedFindSessionResults;
@@ -123,7 +127,6 @@ public:
 	
     UFUNCTION(BlueprintCallable)
     void ExecuteSessionsFindSessions(UMOS_SessionsFindSessionsAsyncResult *Result);
-	UFUNCTION(BlueprintImplementableEvent, Category = "Sessions")
 	void OnFindSessionsComplete(bool bWasSuccessful);
 	
     UFUNCTION(BlueprintCallable)

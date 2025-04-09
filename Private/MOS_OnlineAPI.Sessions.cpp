@@ -128,6 +128,11 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     }
 }
 
+void UMOS_GameInstanceSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
+{
+    MOSFindSessionsCompleteDelegate.Execute();
+}
+
 void UMOS_GameInstanceSubsystem::ExecuteSessionsStartListenServer(int32 InAvailableSlots)
 {
     // We need somewhere to store session settings between the main menu and multiplayer map, so that when CreateSession
