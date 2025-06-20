@@ -15,7 +15,6 @@ public class MultiplayerOnlineSubsystem : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"EnhancedInput",
-			"MultiplayerOnlineSubsystem",
 			
 		});
 		

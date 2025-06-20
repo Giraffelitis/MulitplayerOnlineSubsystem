@@ -9,17 +9,16 @@
 #include "GameFramework/GameModeBase.h"
 #include "Interfaces/OnlineSessionInterface.h"
 
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_AsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_CallScopedOjectPtr.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_GetAvatarAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_ListAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_QueryAchievementsAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_QueryLeaderboardsAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_QueryStatsAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_ReadFileSaveGameAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_ReadFileStringAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_TextAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_Types.h"
+#include "Libraries/MOS_AsyncResult.h"
+#include "Libraries/MOS_GetAvatarAsyncResult.h"
+#include "Libraries/MOS_ListAsyncResult.h"
+#include "Libraries/MOS_QueryAchievementsAsyncResult.h"
+#include "Libraries/MOS_QueryLeaderboardsAsyncResult.h"
+#include "Libraries/MOS_QueryStatsAsyncResult.h"
+#include "Libraries/MOS_ReadFileSaveGameAsyncResult.h"
+#include "Libraries/MOS_ReadFileStringAsyncResult.h"
+#include "Libraries/MOS_TextAsyncResult.h"
+#include "Libraries/MOS_Types.h"
 
 #include "MOS_GameInstanceSubsystem.generated.h"
 
@@ -30,6 +29,7 @@ class IOnlineSubsystem;
 DECLARE_LOG_CATEGORY_EXTERN(MOSGameInstanceSubsystem, Log, All);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FUpdateFindSessionListDelegate, const FMOSSessionsSearchResult&, SessionResult, const FString&, SessionIdOverride, const FString&, OwningUserName, int32, Ping, int32, OpenPublicConnections);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateSessionListCompleteDelegate);
 
 UCLASS(Blueprintable)
 class MULTIPLAYERONLINESUBSYSTEM_API UMOS_GameInstanceSubsystem : public UGameInstanceSubsystem
@@ -51,6 +51,8 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FUpdateFindSessionListDelegate UpdateFindSessionListDelegate;
+	UPROPERTY(BlueprintAssignable)
+	FUpdateSessionListCompleteDelegate UpdateSessionListCompleteDelegate;
 
 	UPROPERTY(BlueprintReadOnly, Category = "MOS")
 	TArray<FMOSSessionsSearchResult> CachedFindSessionResults;
@@ -59,17 +61,15 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "MOS")
 	UMOS_SessionsFindSessionsAsyncResult* FindSessionsAsyncResult;
 	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
-	int PingInMs = 999;
+	int PingInMs = 9999;
 	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	FString SessionInfo = "";
 	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	FString SessionUniqueNetID = "";
 	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
+	FString CustomSessionName = "Default Session Name";
+	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
 	FString SessionOwnerName = "";
-	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
-	int OpenPublicConnections = 999;
-	UPROPERTY(BlueprintReadOnly, Category = "MOS|Sessions")
-	int OpenPrivateConnections = 999;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (DisplayName = "LocalUserNum", Category = "MOS"))
 	int32 LocalUserNum = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MOS|Sessions")
@@ -99,6 +99,8 @@ public:
 	bool GetIsAttemptingLogin() {return bIsAttemptingLogin;}
 	UFUNCTION(BlueprintCallable)
 	bool GetDoesAutoLogin() {return bDoesAutoLogin;}
+	UFUNCTION(BlueprintCallable)
+	void SetCustomSessionName(const FString &InSessionName) {CustomSessionName = InSessionName;}
 	
     /* AUTH */
 	

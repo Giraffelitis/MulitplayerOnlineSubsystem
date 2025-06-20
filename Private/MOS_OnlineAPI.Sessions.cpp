@@ -1,9 +1,9 @@
 // Copyright June Rhodes. MIT Licensed.
 
-#include "MultiplayerOnlineSubsystem/Public/MOS_GameInstanceSubsystem.h"
+#include "MOS_GameInstanceSubsystem.h"
 
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_SessionsFindSessionsAsyncResult.h"
-#include "MultiplayerOnlineSubsystem/Public/Libraries/MOS_Types.h"
+#include "Libraries/MOS_SessionsFindSessionsAsyncResult.h"
+#include "Libraries/MOS_Types.h"
 #include "Interfaces/OnlinePartyInterface.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Online/OnlineSessionNames.h"
@@ -11,7 +11,6 @@
 #include "DebugPlus/Public/DP_EnhancedLogging.h"
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "WorldPartition/ContentBundle/ContentBundleLog.h"
 
 
 void UMOS_GameInstanceSubsystem::GetSessionInfo(const FMOSSessionsSearchResult& SearchResult)
@@ -20,8 +19,6 @@ void UMOS_GameInstanceSubsystem::GetSessionInfo(const FMOSSessionsSearchResult& 
     SessionInfo = SearchResult.SessionSearchResult.Session.SessionInfo->ToString();
     SessionUniqueNetID = SearchResult.SessionSearchResult.Session.OwningUserId->ToString();
     SessionOwnerName = SearchResult.SessionSearchResult.Session.OwningUserName;
-    OpenPublicConnections = SearchResult.SessionSearchResult.Session.NumOpenPublicConnections;
-    OpenPrivateConnections = SearchResult.SessionSearchResult.Session.NumOpenPrivateConnections;
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSessionsAsyncResult *Result)
@@ -62,7 +59,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsFindSessions(UMOS_SessionsFindSe
     SearchObject->QuerySettings.Set(SEARCH_KEYWORDS, FString("MOSSession"), EOnlineComparisonOp::Equals);
     
     /*search for non-listening sessions*/
- //   SearchObject->QuerySettings.Set(FName(TEXT("__EOS_bListening")), false , EOnlineComparisonOp::Equals);
+    //SearchObject->QuerySettings.Set(FName(TEXT("__EOS_bListening")), false , EOnlineComparisonOp::Equals);
     /*Show lobbies that are full*/
     SearchObject->QuerySettings.SearchParams.Add(FName(TEXT("minslotsavailable")), FOnlineSessionSearchParam((int64)0L, EOnlineComparisonOp::GreaterThanEquals));
     
@@ -144,6 +141,7 @@ void UMOS_GameInstanceSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
         
         UpdateFindSessionListDelegate.Broadcast(SessionResult, SessionIdOverride, OwningUserName, Ping, NumOpenPublicConnections);
     }
+    UpdateSessionListCompleteDelegate.Broadcast();
 }
 
 void UMOS_GameInstanceSubsystem::ExecuteSessionsStartListenServer(int32 InAvailableSlots)
@@ -257,7 +255,7 @@ void UMOS_GameInstanceSubsystem::ExecuteSessionsCreateSession(FName SessionName,
     SessionSettings.bUseLobbiesIfAvailable = true; //OSS->GetSubsystemName().IsEqual(STEAM_SUBSYSTEM);
     SessionSettings.bUseLobbiesVoiceChatIfAvailable = false;
     SessionSettings.BuildUniqueId = 0;
-    SessionSettings.Settings.Add(FName(TEXT("SessionSetting")), FOnlineSessionSetting(TEXT("SettingValue"), EOnlineDataAdvertisementType::ViaOnlineService));
+    SessionSettings.Settings.Add(FName(TEXT("CustomSessionID")), FOnlineSessionSetting(CustomSessionName, EOnlineDataAdvertisementType::ViaOnlineService));
     SessionSettings.Set(SEARCH_KEYWORDS, FString("MOSSession"), EOnlineDataAdvertisementType::ViaOnlineService);
     
     // Register an event so we can receive the create outcome.
